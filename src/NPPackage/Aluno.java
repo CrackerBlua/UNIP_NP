@@ -36,6 +36,14 @@ public class Aluno {
 		return mapAlunos;
 	}
 	
+	public static void setMapAlunos(String ra, Aluno aluno) {
+		if(!mapAlunos.containsKey(ra)) {
+			mapAlunos.put(ra, new Aluno());
+		}
+		
+		mapAlunos.put(ra, aluno);
+	}
+	
 	public static void showAlunosCadastrados() {
 		System.out.println("Alunos cadastrados: ");
 		Map<String, Aluno> mapAlunos = getMapAlunos();
@@ -73,13 +81,4 @@ public class Aluno {
 	public static boolean hasAlunoById(String id) {
 		return getMapAlunos().containsKey(id);
 	}
-
-	public static void setMapAlunos(String ra, Aluno aluno) {
-		if(!mapAlunos.containsKey(ra)) {
-			mapAlunos.put(ra, new Aluno());
-		}
-		
-		mapAlunos.put(ra, aluno);
-	}
-
 }

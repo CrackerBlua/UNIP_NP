@@ -6,10 +6,6 @@ public class Menu {
 
 	static Scanner sc = new Scanner(System.in);
 	
-	public Menu() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	public static void mainMenu() {
 		System.out.println("_________________________________________________");
 		System.out.println("|                      Menu                     |");
@@ -33,9 +29,12 @@ public class Menu {
 					listMenu("aluno");
 					break;
 				case 3:
-					//To-do
+					GestaoFaculdadeBO.cadastrarCurso(GestaoFaculdadeBO.createCurso());
+					break;
 				case 4:
-					//To-do
+					CommandUtils.clearScreen(10);
+					Curso.showAllCursos();
+					break;
 				case 5:
 					System.out.println("Encerrando o programa...");
 					System.exit(0);
@@ -48,6 +47,18 @@ public class Menu {
 					"MenuErrorException: \n" +
 					err.getMessage() + "\n" 
 			);
+		}
+	}
+	
+	public static void executeMainMenu() {
+		int choiceMenu = 0;
+		try (Scanner sc = new Scanner(System.in)) {
+			while (choiceMenu != 5) {
+				Menu.mainMenu();
+				System.out.println("\nEscolha uma opção:");
+				choiceMenu = sc.nextInt();
+				Menu.menuOperation(choiceMenu);
+			}
 		}
 	}
 	
@@ -98,6 +109,22 @@ public class Menu {
 					err.getMessage() + "\n"
 			);
 		}
+	}
+	
+	public static String getCursoNivel(int option) {
+		try {
+			switch (option) {
+			case 1:
+				return Curso.getFormacaoNivel(1);
+			case 2:
+				return Curso.getFormacaoNivel(2);
+			default:
+				throw new MenuErrorException("Valor entrado não consta na lista, escolha um novo valor válido");
+			}
+		} catch (MenuErrorException e) {
+			// TODO: handle exception
+		}
+		return "";
 	}
 	
 	public static class MenuErrorException extends Exception {

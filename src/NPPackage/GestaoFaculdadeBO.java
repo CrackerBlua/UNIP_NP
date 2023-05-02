@@ -3,23 +3,13 @@ package NPPackage;
 import java.util.*;
 
 public class GestaoFaculdadeBO {
-	
-	static Scanner sc = new Scanner(System.in);
-	
+		
 	public static void loadData() {
 		FileService.loadData();
 	}
 	
 	public static void executeMenu() {
-		int choiceMenu = 0;
-		try (Scanner sc = new Scanner(System.in)) {
-			while (choiceMenu != 5) {
-				Menu.mainMenu();
-				System.out.println("\nEscolha uma opção: ");
-				choiceMenu = sc.nextInt();
-				Menu.menuOperation(choiceMenu);
-			}
-		}	
+		Menu.executeMainMenu();
 	}
 	
 	public static Aluno createAluno() {
@@ -40,24 +30,30 @@ public class GestaoFaculdadeBO {
 		return null;
 	}
 	
-	public static Aluno createCurso() {
+	public static Curso createCurso() {
+		int optionChoice = 0;
+		Boolean bypass = false;
 		List<String> answers = new ArrayList<String>();  
-
-		try (Scanner sc = new Scanner(System.in)) {
-			System.out.println("Entre com o Nome do Curso: " );
-			answers.add(sc.next());
+	
+		System.out.println("Entre com o Nome do Curso: " );
+		answers.add(Menu.sc.next());
 			
-			System.out.println("Entre com o Nível do Curso: \n 1 - Graduação\n 2 - Pós-Graduação\n");
-			answers.add(sc.next());
+		while(!bypass) {
+			System.out.println("Entre com o Nível do Curso: \n 1 - Graduação\n 2 - Pós-Graduação");
+			optionChoice = Menu.sc.nextInt();
+			bypass = optionChoice == 1 || optionChoice == 2? true: false;
 			
-			System.out.println("Entre com o Nome do aluno: " );
-			answers.add(sc.next());
+			if(!bypass) System.out.println("Entre com um valor válido!\n");
+		}
+		answers.add(Menu.getCursoNivel(optionChoice));
+			
+		System.out.println("Entre com o Ano do Curso: " );
+		answers.add(String.valueOf(Menu.sc.next()));
+		
+		if(!Curso.hasCursoByKey(Curso.createCursoKey(answers.get(0), answers.get(1), answers.get(2)))) {
+			return new Curso(answers.get(0), answers.get(1), Integer.valueOf(answers.get(2)));
 		}
 		
-		if(!Aluno.hasAlunoById(answers.get(0))) {
-			return new Aluno(answers.get(0), answers.get(1));
-		}
-
 		return null;
 	}
 	
@@ -71,6 +67,13 @@ public class GestaoFaculdadeBO {
 		}
 	}
 	
-
-
+	static void cadastrarCurso(Curso curso) {
+		if(curso == null) {
+			System.out.println("Já existe um curso dessa matéria, ano e nível!");
+			CommandUtils.awaitUntil(5000);
+		} else {
+			Curso.setMapCursos(Curso.getCursoKey(curso), curso);
+			Curso.upsertCursos();
+		}
+	}
 }

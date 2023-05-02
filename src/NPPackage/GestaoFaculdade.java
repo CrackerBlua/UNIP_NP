@@ -7,6 +7,6 @@ public class GestaoFaculdade {
 	public static void main(String[] args){
 		GestaoFaculdadeBO.loadData();
 		FileService.checkExistsFolder();
-		CommandUtils.awaitTimeAndRun(() -> { GestaoFaculdadeBO.executeMenu(); }, 5000);
+		GestaoFaculdadeBO.executeMenu();
 	}
 }
