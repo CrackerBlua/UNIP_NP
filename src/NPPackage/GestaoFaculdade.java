@@ -10,9 +10,9 @@ public class GestaoFaculdade {
 	
 	public static void main(String[] args) {
 		try (Scanner sc = new Scanner(System.in)) {
-			GestaoFaculdadeBO.executeMenu();
-			GestaoFaculdadeBO.loadData();
 			FileService.checkExistsFolder();
+			GestaoFaculdadeBO.loadData();
+			GestaoFaculdadeBO.executeMenu();
 		}catch (InputMismatchException ex) {
 			System.out.println("Valor entrado não é um número, entre com um valor válido!");
 		}

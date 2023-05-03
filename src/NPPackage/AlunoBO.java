@@ -17,7 +17,9 @@ public class AlunoBO {
 		answers.add(String.valueOf(MenuBO.sc.next()));
 			
 		System.out.println("Entre com o Nome do aluno: " );
-		answers.add(MenuBO.sc.next());
+		String str = CommandUtils.getInput(MenuBO.sc.next());
+		System.out.println(str);
+//		answers.add(MenuBO.sc.tokens().toString());
 		
 		if(!Aluno.hasAlunoById(answers.get(0))) return new Aluno(answers.get(0), answers.get(1));
 
@@ -32,6 +34,10 @@ public class AlunoBO {
 			Aluno.setMapAlunos(aluno.getId(), aluno);
 			Aluno.upsertAluno();
 		}
+	}
+	
+	static void upsertAluno() {
+		FileService.upsertAlunoRecord(Aluno.getMapAlunos());
 	}
 	
 	static void showAlunosCadastrados(String ra) {

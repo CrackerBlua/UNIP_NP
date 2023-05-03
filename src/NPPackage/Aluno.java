@@ -54,7 +54,7 @@ public class Aluno {
 	}
 	
 	public static void upsertAluno() {
-		FileService.upsertAlunoRecord(getMapAlunos());
+		AlunoBO.upsertAluno();
 	}
 	
 	@Override

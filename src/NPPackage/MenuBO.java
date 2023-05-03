@@ -11,7 +11,7 @@ public class MenuBO {
 	static boolean breakListCursoMenu 		= false;
 	static boolean breakListNivelCursoMenu 	= false;
 
-	static Scanner sc 					= new Scanner(System.in);
+	static Scanner sc 						= new Scanner(System.in);
 	
 	public static void executeMainMenu() {
 		mainMenu();
@@ -83,7 +83,7 @@ public class MenuBO {
 			switch(option) {
 				case 1: setGraduacao(answers); break;
 				case 2: setPosGraduacao(answers); break;
-				default: throw new MenuErrorException("Valor entrado para o menu de listagem de alunos esta incorreto, escolher um valor válido!");
+				default: throw new MenuErrorException("Valor entrado para o menu de listagem de cursos esta incorreto, escolher um valor válido!");
 			}
 		} catch (MenuErrorException err) {
 			System.out.println("Erro: " + err.getMessage() + "\n");

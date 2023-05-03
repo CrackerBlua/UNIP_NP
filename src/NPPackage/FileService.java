@@ -146,15 +146,14 @@ public class FileService {
 		    bufferWrt.newLine();
 		
 			for(String str: mapAlunos.keySet()) {
-				if(!alunosUpserted.contains(str)) {						
-					rows = new ArrayList<String>();
-					
-					alunosUpserted.add(str);
-					rows.add(mapAlunos.get(str).getId());
-					rows.add(mapAlunos.get(str).getName());
-					bufferWrt.write(String.join(",", rows));
-					bufferWrt.newLine();
-				}
+				if(alunosUpserted.contains(str)) continue;
+				
+				rows = new ArrayList<String>();
+				alunosUpserted.add(str);
+				rows.add(mapAlunos.get(str).getId());
+				rows.add(mapAlunos.get(str).getName());
+				bufferWrt.write(String.join(",", rows));
+				bufferWrt.newLine();
 			}
 			
 		    bufferWrt.close();

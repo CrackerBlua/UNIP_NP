@@ -1,6 +1,6 @@
 package NPPackage;
 
-import java.io.IOException;
+import java.io.*;
 
 public class CommandUtils {
 
@@ -40,4 +40,17 @@ public class CommandUtils {
 	static void clearScreen(int qtd) {  
 		for (int i = 0; i < qtd; ++i) System.out.println();
 	} 
+	
+	static String getInput(String prompt){
+		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+	    System.out.print(prompt);
+	    System.out.flush();
+
+	    try{
+	    	return stdin.readLine();
+	    } catch (Exception e){
+	    	return "Error: " + e.getMessage();
+	    }
+	}
 }
