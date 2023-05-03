@@ -33,18 +33,6 @@ public class CommandUtils {
 		runnable.run();
 	}
 
-//	static void setTimeout(Runnable runnable, int delay){
-//	    new Thread(() -> {
-//	        try {
-//	            Thread.sleep(delay);
-//	            runnable.run();
-//	        }
-//	        catch (Exception e){
-//	            System.err.println(e);
-//	        }
-//	    }).start();
-//	}
-//	
 	static void clearScreen() {  
 		for (int i = 0; i < 50; ++i) System.out.println();
 	} 

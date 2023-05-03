@@ -4,16 +4,8 @@ import java.util.*;
 
 public class Curso {
 	
-	private enum Formacao { 
+	public enum Formacao { 
 		GRADUACAO, POS_GRADUACAO;
-		
-		public String getFormacao() {
-			switch(this) {
-				case GRADUACAO: return "graduacao";
-				case POS_GRADUACAO: return "pos_graduacao";
-				default: return null;
-			}
-		}
 	}
 	
 	private String nome 	= "";
@@ -28,21 +20,11 @@ public class Curso {
 		this.ano 	= ano;
 		this.nivel	= nivel;
 	}
-
-//	private String getFormacaoNivel(String nivel) {
-//		if(Formacao.GRADUACAO.getFormacao().equalsIgnoreCase(nivel)) return Formacao.GRADUACAO.getFormacao();	
-//		else if(Formacao.POS_GRADUACAO.getFormacao().equalsIgnoreCase(nivel)) return Formacao.POS_GRADUACAO.getFormacao();
-//		return null;
-//	}
 	
-	public static String getFormacaoNivel(int option) {
-		if(option == 1) {
-			return Formacao.GRADUACAO.name();
-		} else if (option == 2) {
-			return Formacao.POS_GRADUACAO.name();
-		}
-		
-		return "";
+	public Curso(String nome, String nivel, String ano) {
+		this.nome 	= nome;
+		this.ano 	= Integer.valueOf(ano);
+		this.nivel	= nivel;
 	}
 	
 	public String getNome() {
@@ -69,32 +51,30 @@ public class Curso {
 		this.nivel = nivel;
 	}
 	
-	public static void saveAlunoRecord() {
-		
-	}
-	
-	public static String createCursoKey(String nome, String nivel, String ano) {
-		return nome + ";" + nivel + ";" + String.valueOf(ano) + ";";
-	}
-	
-	public static String getCursoKey(Curso curso) {
-		return curso.nome + ";" + curso.nivel + ";" + curso.ano + ";";
-	}
-
 	public static Map<String, Curso> getMapCursos() {
 		return mapCursos;
 	}
 
 	public static void setMapCursos(String key, Curso curso) {
-		if(!mapCursos.containsKey(key)) {
-			mapCursos.put(key, new Curso());
-		}
+		if(!mapCursos.containsKey(key)) mapCursos.put(key, new Curso());
 
 		mapCursos.put(key, curso);
 	}
 	
+	public static String createCursoKey(String nome, String nivel, String ano) {
+		return CursoBO.createCursoKey(nome, nivel, ano);
+	}
+	
+	public static String createCursoKey(String nome, String nivel, int ano) {
+		return CursoBO.createCursoKey(nome, nivel, ano);
+	}
+	
+	public static String getCursoKey(Curso curso) {
+		return CursoBO.getCursoKey(curso);
+	}
+	
 	public static boolean hasCursoByKey(String key) {
-		return getMapCursos().containsKey(key);
+		return CursoBO.hasCursoByKey(key);
 	}
 	
 	public static void upsertCursos() {
@@ -102,19 +82,15 @@ public class Curso {
 	}
 	
 	public static void showAllCursos() {
-		System.out.println("Cursos cadastrados: ");
-		Map<String, Curso> mapCursos = getMapCursos();
-
-		for(String str: mapCursos.keySet()) {
-			System.out.println(String.format(
-					"Nome: %s - Tipo: %s - Ano: %s", 
-					 mapCursos.get(str).getNome(),
-					 mapCursos.get(str).getNivel(),
-					 mapCursos.get(str).getAno()
-				)
-			);
-		}
-		CommandUtils.awaitUntil();
+		CursoBO.showAllCursos();
+	}
+	
+	public static void showCursosByYear(int year) {
+		CursoBO.showCursosByYear(year);
+	}
+	
+	public static String getFormacaoNivel(int option) {
+		return CursoBO.getFormacaoNivel(option);
 	}
 
 	@Override

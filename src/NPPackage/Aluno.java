@@ -5,11 +5,10 @@ import java.util.*;
 public class Aluno {
 
 	private String id = ""; //RA <--> ID
-	private String name = "";
+	private String name = "";	
 	private static Map<String, Aluno> mapAlunos = new HashMap<String, Aluno>();
-	FileService fileService = new FileService();
 
-	public Aluno() {}
+	public Aluno() {/* TODO Auto-generated constructor stub */}
 
 	public Aluno(String id, String name) {
 		this.id 	= id;
@@ -37,48 +36,29 @@ public class Aluno {
 	}
 	
 	public static void setMapAlunos(String ra, Aluno aluno) {
-		if(!mapAlunos.containsKey(ra)) {
-			mapAlunos.put(ra, new Aluno());
-		}
+		if(!mapAlunos.containsKey(ra)) mapAlunos.put(ra, new Aluno());
 		
 		mapAlunos.put(ra, aluno);
 	}
 	
+	public static boolean hasAlunoById(String id) {
+		return AlunoBO.hasAlunoById(id);
+	}
+	
 	public static void showAlunosCadastrados() {
-		System.out.println("Alunos cadastrados: ");
-		Map<String, Aluno> mapAlunos = getMapAlunos();
-
-		for(String str: mapAlunos.keySet()) {
-			System.out.println(String.format(
-					"RA: %s - Aluno: %s", 
-					 mapAlunos.get(str).getId(),
-					 mapAlunos.get(str).getName()
-				)
-			);
-		}
-		
-		CommandUtils.awaitUntil();
+		AlunoBO.showAlunosCadastrados();
 	}
 	
 	public static void showAlunosCadastrados(String ra) {
-		System.out.println("\nAluno: ");
-		Map<String, Aluno> mapAlunos = getMapAlunos();
-
-		System.out.println(String.format(
-				"RA: %s - Aluno: %s", 
-				 mapAlunos.get(ra).getId(),
-				 mapAlunos.get(ra).getName()
-			)
-		);
-		
-		CommandUtils.awaitUntil();
+		AlunoBO.showAlunosCadastrados(ra);
 	}
 	
 	public static void upsertAluno() {
 		FileService.upsertAlunoRecord(getMapAlunos());
 	}
 	
-	public static boolean hasAlunoById(String id) {
-		return getMapAlunos().containsKey(id);
+	@Override
+	public String toString() {
+		return "Nome do aluno: " + getName() + " RA: " + getId();
 	}
 }
