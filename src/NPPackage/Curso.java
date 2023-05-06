@@ -81,6 +81,10 @@ public class Curso {
 		FileService.upsertCurso(getMapCursos());
 	}
 	
+	public static String getFormacaoNivel(int option) {
+		return CursoBO.getFormacaoNivel(option);
+	}
+	
 	public static void showAllCursos() {
 		CursoBO.showAllCursos();
 	}
@@ -88,13 +92,9 @@ public class Curso {
 	public static void showCursosByYear(int year) {
 		CursoBO.showCursosByYear(year);
 	}
-	
-	public static String getFormacaoNivel(int option) {
-		return CursoBO.getFormacaoNivel(option);
-	}
 
 	@Override
 	public String toString() {
-		return "Nome: " + getNome() + "\nNível: " + getNivel() + "\nAno: " + getAno();
+		return "Nome: " + getNome() + " Nível: " + getNivel() + "Ano: " + getAno();
 	}
 }

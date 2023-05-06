@@ -18,19 +18,25 @@ public class MenuBO {
 	}
 	
 	private static void mainMenu() {
-		while(!breakMainMenu) {
-			MenuDesigner.drawMainMenu();
-			mainMenuOptions(sc.nextInt());				
+		try {
+			while(!breakMainMenu) {
+				MenuDesigner.drawMainMenu();
+				mainMenuOptions(sc.nextInt());				
+			}
+		} catch (InputMismatchException ex) {
+			System.out.println("Valor entrado não é um número, entre com um valor válido!");
 		}
 	}
 	
 	private static void mainMenuOptions(int option) {
 		try {
 			switch(option) {
-				case 1: AlunoBO.cadastrarAluno(AlunoBO.createAluno()); break;
+				case 1: AlunoBO.cadastrarAluno(AlunoBO.createAluno(sc)); break;
 				case 2: listingAlunoMenu(); break;
 				case 3: CursoBO.cadastrarCurso(CursoBO.createCurso()); break;
 				case 4: listingCursoMenu(); break;
+				case 5: listingCursoMenu(); break;
+
 				default: throw new MenuErrorException("Valor entrado para o menu principal é inválido, escolha um novo valor válido");
 			}
 		} catch (MenuErrorException err) {

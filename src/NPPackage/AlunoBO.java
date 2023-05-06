@@ -10,16 +10,15 @@ public class AlunoBO {
 		return Aluno.getMapAlunos().containsKey(id);
 	}
 	
-	public static Aluno createAluno() {
+	public static Aluno createAluno(Scanner sc) {
 		List<String> answers = new ArrayList<String>();  
 
 		System.out.println("Entre com o RA do aluno: " );
-		answers.add(String.valueOf(MenuBO.sc.next()));
+		answers.add(String.valueOf(sc.next()));
 			
 		System.out.println("Entre com o Nome do aluno: " );
-		String str = CommandUtils.getInput(MenuBO.sc.next());
-		System.out.println(str);
-//		answers.add(MenuBO.sc.tokens().toString());
+		String name = sc.next();
+		answers.add(name += sc.hasNextLine()? sc.nextLine():"");
 		
 		if(!Aluno.hasAlunoById(answers.get(0))) return new Aluno(answers.get(0), answers.get(1));
 
@@ -55,6 +54,9 @@ public class AlunoBO {
 			System.out.println(Aluno.getMapAlunos().get(str));
 		
 		CommandUtils.awaitUntil();
+	}
+	
+	static void concatenateName(String name, Scanner sc) {
 	}
 
 }

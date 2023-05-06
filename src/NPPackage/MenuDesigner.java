@@ -12,7 +12,8 @@ public class MenuDesigner {
 		System.out.println("|2 - Listar alunos                              |");
 		System.out.println("|3 - Cadastrar matéria                          |");
 		System.out.println("|4 - Listar matéria                             |");
-		System.out.println("|5 - Sair                                       |");
+		System.out.println("|5 - Cadastrar rendimentos                      |");
+		System.out.println("|6 - Sair                                       |");
 		System.out.println("|_______________________________________________|");
 		System.out.println("Escolha uma opção: ");
 	}
@@ -39,7 +40,7 @@ public class MenuDesigner {
 	
 	public static void drawNivelCurso() {
 		System.out.println("_________________________________________________");
-		System.out.println("|                   Listar por                  |");
+		System.out.println("|                  Escolher                     |");
 		System.out.println("|1 - Graduação                                  |");
 		System.out.println("|2 - Pós Graduação                              |");
 		System.out.println("|_______________________________________________|");
