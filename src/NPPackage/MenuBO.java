@@ -2,6 +2,8 @@ package NPPackage;
 
 import java.util.*;
 
+import NPPackage.Rendimento.NotaValorException;
+
 public class MenuBO {
 
 	public MenuBO() {/* Constructor*/}
@@ -10,7 +12,7 @@ public class MenuBO {
 	static boolean breakListAlunoMenu 		= false;
 	static boolean breakListCursoMenu 		= false;
 	static boolean breakListNivelCursoMenu 	= false;
-
+	static boolean breakListhasReposicao 	= false;
 	static Scanner sc 						= new Scanner(System.in);
 	
 	public static void executeMainMenu() {
@@ -33,7 +35,7 @@ public class MenuBO {
 			switch(option) {
 				case 1: AlunoBO.cadastrarAluno(AlunoBO.createAluno(sc)); break;
 				case 2: listingAlunoMenu(); break;
-				case 3: CursoBO.cadastrarCurso(CursoBO.createCurso()); break;
+				case 3: CursoBO.cadastrarCurso(CursoBO.createCurso(sc)); break;
 				case 4: listingCursoMenu(); break;
 				case 5: listingCursoMenu(); break;
 
@@ -58,7 +60,7 @@ public class MenuBO {
 			switch(option) {
 				case 1: printAllCursos(); break;
 				case 2: printCursosByYear(); break;
-				case 3: breakListAlunoMenu = true; break;
+				case 3: breakListCursoMenu = true; CommandUtils.clearScreen(20); break;
 				default: throw new MenuErrorException("Valor entrado para o menu de listagem de alunos esta incorreto, escolher um valor válido!");
 			}
 		} catch (MenuErrorException err) {
@@ -77,10 +79,11 @@ public class MenuBO {
 		Curso.showCursosByYear(sc.nextInt());
 	}
 	
-	public static void createCursoMenu(int option, List<String> answers) {
+	public static void createCursoMenu(List<String> answers) {
 		while(!breakListNivelCursoMenu) {
 			MenuDesigner.drawNivelCurso();
-			createCursoMenuOptions(sc.nextInt(), answers);
+			int option = sc.nextInt();
+			createCursoMenuOptions(option,answers);
 		}
 	}
 	
@@ -120,7 +123,7 @@ public class MenuBO {
 			switch(option) {
 				case 1: printAllAlunos(); break;
 				case 2: printAlunoByRA(); break;
-				case 3: breakListAlunoMenu = true; break;
+				case 3: breakListAlunoMenu = true; CommandUtils.clearScreen(20); break;
 				default: throw new MenuErrorException("Valor entrado para o menu de listagem de alunos esta incorreto, escolher um valor válido!");
 			}
 		} catch (MenuErrorException err) {
@@ -137,6 +140,34 @@ public class MenuBO {
 	private static void printAlunoByRA() {
 		System.out.println("Digite o RA do aluno: ");
 		Aluno.showAlunosCadastrados(sc.next());
+	}
+	
+	public static void listingHasReposicao(Rendimento rendimento) {
+		while(!breakListhasReposicao) {
+			MenuDesigner.drawHasReposicao();
+			listinghasReposicaoOptions(sc.nextInt(), rendimento);
+		}
+	}
+	
+	private static void listinghasReposicaoOptions(int option, Rendimento rendimento) {
+		try {
+			switch(option) {
+				case 1: setReposicao(rendimento); break;
+				case 2: breakListAlunoMenu = true; CommandUtils.clearScreen(20); break;
+				default: throw new MenuErrorException("Valor entrado para o menu de listagem esta incorreto, escolher um valor válido!");
+			}
+		} catch (MenuErrorException err) {
+			System.out.println("Erro: " + err.getMessage() + "\n");
+			CommandUtils.awaitUntil();
+		} catch (NotaValorException err) {
+			System.out.println("Erro: " + err.getMessage() + "\n");
+			CommandUtils.awaitUntil();
+		}
+	}
+	
+	private static void setReposicao(Rendimento rendimento) throws NotaValorException {
+		System.out.println("Qual foi a nota na NP2?");
+		rendimento.setReposição(sc.nextDouble());
 	}
 	
 	public static class MenuErrorException extends Exception {

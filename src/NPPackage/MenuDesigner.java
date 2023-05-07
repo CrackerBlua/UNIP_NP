@@ -15,7 +15,7 @@ public class MenuDesigner {
 		System.out.println("|5 - Cadastrar rendimentos                      |");
 		System.out.println("|6 - Sair                                       |");
 		System.out.println("|_______________________________________________|");
-		System.out.println("Escolha uma opção: ");
+		System.out.println("\nEscolha uma opção: ");
 	}
 	
 	public static void drawListagemAlunoMenu() {
@@ -25,7 +25,7 @@ public class MenuDesigner {
 		System.out.println("|2 - Listar alunos por RA                       |");
 		System.out.println("|3 - Voltar                                     |");
 		System.out.println("|_______________________________________________|");
-		System.out.println("Escolha uma opção de listagem listar: ");
+		System.out.println("\nEscolha uma opção de listagem listar: ");
 	}
 	
 	public static void drawListagemCursoMenu() {
@@ -35,7 +35,7 @@ public class MenuDesigner {
 		System.out.println("|2 - Por ano da Materias/Curso                  |");
 		System.out.println("|3 - Voltar                                     |");
 		System.out.println("|_______________________________________________|");
-		System.out.println("Escolha uma opção de listagem listar: ");
+		System.out.println("\nEscolha uma opção de listagem listar: ");
 	}
 	
 	public static void drawNivelCurso() {
@@ -44,7 +44,28 @@ public class MenuDesigner {
 		System.out.println("|1 - Graduação                                  |");
 		System.out.println("|2 - Pós Graduação                              |");
 		System.out.println("|_______________________________________________|");
-		System.out.println("Escolha o nível do curso: ");
+		System.out.println("\nEscolha o nível do curso: ");
+	}
+	
+	public static void drawCursoRendimento() {
+		System.out.println("_________________________________________________");
+		System.out.println("|         Entre com os dados do curso           |");
+		System.out.println("|_______________________________________________|");
+	}
+	
+	public static void drawAlunoRendimento() {
+		System.out.println("_________________________________________________");
+		System.out.println("|         Entre com os dados do curso           |");
+		System.out.println("|_______________________________________________|");
+	}
+	
+	public static void drawHasReposicao() {
+		System.out.println("_________________________________________________");
+		System.out.println("|          Foi aplicado reposição?              |");
+		System.out.println("|1 - Sim                                        |");
+		System.out.println("|2 - Não                                        |");
+		System.out.println("|_______________________________________________|");
+		System.out.println("\n Resposta: ");
 	}
 
 }

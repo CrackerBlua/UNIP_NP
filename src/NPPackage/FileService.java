@@ -168,7 +168,7 @@ public class FileService {
 	}
 	
 	public static void upsertCurso(Map<String, Curso> mapCursos) {
-		String[] header = {"NOME_CURSO", "NIVEL_GRADUACAO", "ANO GRADUACAO"};
+		String[] header = {"NOME_CURSO", "NIVEL_GRADUACAO", "ANO_GRADUACAO"};
 
 		Path filePath = Paths.get(pathFolder + "\\" + cursoCSV);
 		List<String> rows;
@@ -204,6 +204,36 @@ public class FileService {
 					"IOException: \n" +
 					err.getMessage() + "\n"
 			);
+		}
+	}
+	
+	public static void createRelatorioRendimento(Rendimento rendimento) {
+		String[] header = {"ID_ALUNO", "NOTA_NP1", "NOTA_NP2", "NOTA_REPOSICAO", "NOTA_EXAME"};
+		String pathDir = pathFolder + "\\Relatorios\\";
+		String fileName = rendimento.createReportName();
+		
+		checkToCreateFolder(pathDir);
+		
+		
+		Path filePath = Paths.get(pathDir);
+
+	}
+	
+	private static void checkToCreateFolder(String pathDir) {
+		Path filePath = Paths.get(pathDir);
+
+		if(!filePath.toFile().exists()) {
+			try { Files.createDirectories(filePath); }
+			catch (IOException e) { Utils.throwMessageToUser(e, "Erro criar diretório"); }
+		}
+	}
+	
+	private static void checkToCreateFile(String pathDir) {
+		Path filePath = Paths.get(pathDir);
+
+		if(!filePath.toFile().exists()) {
+			try { Files.createFile(filePath); }
+			catch (IOException e) { Utils.throwMessageToUser(e, "Erro criar diretório"); }
 		}
 	}
 

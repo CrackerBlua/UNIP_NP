@@ -2,6 +2,7 @@ package NPPackage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import NPPackage.Curso.Formacao;
 
@@ -50,13 +51,13 @@ public class CursoBO {
 		}
 	}
 	
-	static Curso createCurso() {
+	static Curso createCurso(Scanner sc) {
 		List<String> answers = new ArrayList<String>();  
 
 		System.out.println("Entre com o Nome do Curso: " );
-		answers.add(MenuBO.sc.next());
+		answers.add(sc.next());
 		
-		MenuBO.createCursoMenu(MenuBO.sc.nextInt(), answers);
+		MenuBO.createCursoMenu(answers);
 		
 		System.out.println("Entre com o Ano do Curso: " );
 		answers.add(String.valueOf(MenuBO.sc.next()));

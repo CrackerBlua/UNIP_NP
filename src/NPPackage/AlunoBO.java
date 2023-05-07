@@ -35,6 +35,10 @@ public class AlunoBO {
 		}
 	}
 	
+	static Aluno getAlunoById(String RA) {
+		return Aluno.getMapAlunos().get(RA);
+	}
+	
 	static void upsertAluno() {
 		FileService.upsertAlunoRecord(Aluno.getMapAlunos());
 	}
@@ -55,8 +59,4 @@ public class AlunoBO {
 		
 		CommandUtils.awaitUntil();
 	}
-	
-	static void concatenateName(String name, Scanner sc) {
-	}
-
 }

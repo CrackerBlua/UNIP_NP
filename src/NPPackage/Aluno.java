@@ -45,6 +45,10 @@ public class Aluno {
 		return AlunoBO.hasAlunoById(id);
 	}
 	
+	public static Aluno getAlunoById(String RA) {
+		return AlunoBO.getAlunoById(RA);
+	}
+	
 	public static void showAlunosCadastrados() {
 		AlunoBO.showAlunosCadastrados();
 	}

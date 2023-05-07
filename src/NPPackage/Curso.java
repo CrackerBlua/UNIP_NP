@@ -95,6 +95,6 @@ public class Curso {
 
 	@Override
 	public String toString() {
-		return "Nome: " + getNome() + " Nível: " + getNivel() + "Ano: " + getAno();
+		return "Nome: " + getNome() + " Nível: " + getNivel() + " Ano: " + getAno();
 	}
 }

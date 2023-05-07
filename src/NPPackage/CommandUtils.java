@@ -26,6 +26,18 @@ public class CommandUtils {
 		}
 	}
 	
+	static void awaitUntil(String message) {
+		try {
+			System.out.println(message);
+			System.out.println("\nAperte qualquer tecla para voltar!");
+			System.in.read();
+			clearScreen(12);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	static void awaitTimeAndRun(Runnable runnable, long delay) {
 		long start = System.currentTimeMillis();
 		long end = start + delay;
