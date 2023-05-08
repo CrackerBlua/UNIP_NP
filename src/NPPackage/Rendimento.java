@@ -2,6 +2,9 @@ package NPPackage;
 
 import java.util.*;
 
+import NPPackage.Utils.NotaValorException;
+
+
 public abstract class Rendimento {
 
 	private Double np1 = 0.0;
@@ -16,8 +19,8 @@ public abstract class Rendimento {
 	private static Map<String, Rendimento> mapSecretKeyRendimentos = new HashMap<String, Rendimento>();
 
 	public abstract void calcMedia();
-	public abstract void calcExam();
-	public abstract void getExameDetails(Scanner sc, Rendimento rendimento) throws NotaValorException;
+	public abstract void calcFinalMedia();
+	public abstract void loadCalcMedia();
 	public abstract String isApproved();
 
 	public Double getNp1() {
@@ -192,38 +195,39 @@ public abstract class Rendimento {
 		RendimentoBO.listRendimentosByCurso(cursoKey);
 	}
 	
+	public void getExameDetails(Scanner sc) throws NotaValorException {
+		boolean byPass = false;
+		System.out.println("O Aluno não atingiu a média esperada!");
+		
+		while(!byPass) {
+			try {
+				System.out.println("Entre com a nota do Exame do aluno:");
+				setExame(sc.nextDouble());
+				byPass = true; break;
+			} catch (NotaValorException e) {
+				byPass = false; Utils.throwMessageToUser(e, "Erro ao inserir a nota do Exame!");
+			}
+		} 
+	}
+	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return 	"NP1: " + getNp1() + " NP2: " + getNp2() + 
-				" Reposição: " + getReposicao() + 
-				" Exame: " + getExame() + " Média: " + getMedia();
+		return 	"|NP1: " + getNp1() + "| |NP2: " + getNp2() + 
+				"| |Reposição: " + getReposicao() + 
+				"| |Exame: " + getExame() + "| |Média: " + getMedia() + "|";
 	}
 	
 	/* Inner Classes de diferenciação do tipo do curso*/
 	public static class RendimentoGraduacao extends Rendimento {
-		@Override
-		public void getExameDetails(Scanner sc, Rendimento rendimento) throws NotaValorException {
-			if(rendimento.getMedia() < 7) {
-				System.out.println("O Aluno não atingiu a média esperada!");
-
-				System.out.println("Entre com a nota do Exame do aluno:");
-				super.setExame(sc.nextDouble());
-			}
-		}
 				
 		@Override
 		public void calcMedia() {
-			boolean approved = false;			
-			Double mediaInicial = getMediaCalculated();
-
-			if(mediaInicial >= 7) { approved = true; super.setMedia(mediaInicial); }
-			if(super.getExame() > 0) { calcExam(); }
-			super.setAprovado(approved);
+			super.setMedia(getMediaCalculated()); 
 		}
 
 		@Override
-		public void calcExam() {
+		public void calcFinalMedia() {
 			super.setMedia(getExamMedia());
 			super.setAprovado(super.getMedia() >= 5? true: false);
 		}
@@ -231,6 +235,12 @@ public abstract class Rendimento {
 		@Override
 		public String isApproved() {
 			return super.getMedia() >= 7? "Passou": "Reprovado";
+		}
+		
+		@Override
+		public void loadCalcMedia() {
+			super.setMedia(getMediaCalculated());
+			if(super.getMedia() < 7) super.setMedia(getExamMedia());
 		}
 		
 		private Double getExamMedia() {
@@ -242,38 +252,38 @@ public abstract class Rendimento {
 			if(super.getNp2() < super.getNp1() && super.getNp2() < super.getReposicao()) return (super.getNp1() + super.getReposicao()) / 2;
 			else return (super.getNp1() + super.getNp2()) / 2;
 		}
-
 	}
 	
 	public static class RendimentoPosGraduacao extends Rendimento {
 
 		@Override
-		public void calcMedia() {
-			// TODO Auto-generated method stub
-			
+		public void calcMedia() {		
+			super.setMedia(getMediaCalculated()); 
 		}
 
 		@Override
-		public void calcExam() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void getExameDetails(Scanner sc, Rendimento rendimento) {
-			// TODO Auto-generated method stub
-			
+		public void calcFinalMedia() {
+			super.setMedia(getExamMedia());
 		}
 		
 		@Override
 		public String isApproved() {
 			return super.getMedia() >= 5? "Passou": "Reprovado";
 		}
+		
+		public Double getMediaCalculated() {
+			return (super.getNp1() + super.getNp2()) /2;
+		}
+
+		@Override
+		public void loadCalcMedia() {
+			calcMedia();
+			if(super.getMedia() < 5) calcFinalMedia(); 
+		}
+		
+		private Double getExamMedia() {
+			return (super.getExame() + super.getMedia()) / 2;
+		}
 	}
-	
-	public static class NotaValorException extends Exception {
-		/******/
-		private static final long serialVersionUID = 1L;
-		public NotaValorException(String errorMsg) { super(errorMsg); }
-	}
+
 }

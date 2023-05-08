@@ -2,8 +2,7 @@ package NPPackage;
 
 import java.io.IOException;
 import java.util.*;
-
-import NPPackage.Rendimento.NotaValorException;
+import NPPackage.Utils.*;
 
 public class GestaoFaculdade {
 

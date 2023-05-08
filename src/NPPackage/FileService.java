@@ -3,8 +3,7 @@ package NPPackage;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-
-import NPPackage.Rendimento.NotaValorException;
+import NPPackage.Utils.*;
 
 public class FileService {
 	
@@ -22,26 +21,26 @@ public class FileService {
 
 	public static void loadData() throws NotaValorException, IOException {
 		for(String str: filesToLoad) {
-			int indexAux = 0;
-			if(!checkIfHasFiles(pathFolder + str)) continue;
-			
-			if(str.equalsIgnoreCase(alunoCSV)) loadAlunoData();
-			if(str.equalsIgnoreCase(cursoCSV)) loadCursoData();
+			if(!checkIfHasFiles(pathFolder + str)) continue;			
+			if(str.equalsIgnoreCase(alunoCSV)) loadAlunoData(str);
+			if(str.equalsIgnoreCase(cursoCSV)) loadCursoData(str);
 		}
 
 		Path reportFolder = Paths.get(pathFolder + "Relatorios");
 		
-		if(!reportFolder.toFile().exists())Files.createFile(reportFolder);
+		if(!reportFolder.toFile().exists()) Files.createDirectories(reportFolder);
 
-		for(File file: reportFolder.toFile().listFiles()) {
-			if(file.isDirectory()) continue;
-			loadRendimentoData(file);
+		if(reportFolder.toFile().listFiles().length > 0) {
+			for(File file: reportFolder.toFile().listFiles()) {
+				if(file.isDirectory()) continue;
+				loadRendimentoData(file);
+			}
 		}
 	}
 	
-	public static void loadAlunoData() throws FileNotFoundException {
+	public static void loadAlunoData(String fileName) throws FileNotFoundException {
 		int index = 0;
-		List<List<String>> records = getAlunoData();
+		List<List<String>> records = getData(fileName);
 		for(List<String> alunos: records) {
 			if(index == 0) { index++; continue; }
 			Aluno.setMapAlunos(alunos.get(0), new Aluno(alunos.get(0), alunos.get(1)));
@@ -50,9 +49,9 @@ public class FileService {
 		System.out.println();
 	}
 	
-	public static void loadCursoData() throws FileNotFoundException {
+	public static void loadCursoData(String fileName) throws FileNotFoundException {
 		int index = 0;
-		List<List<String>> records = getCursoData();
+		List<List<String>> records = getData(fileName);
 		
 		for(List<String> cursos: records) {
 			if(index == 0) { index++; continue; }
@@ -62,34 +61,18 @@ public class FileService {
 		}
 	}
 	
-	private static List<List<String>> getAlunoData() throws FileNotFoundException {
+	private static List<List<String>> getData(String fileName)  throws FileNotFoundException{
 		List<List<String>> records = new ArrayList<List<String>>();
 		
-		try (BufferedReader br = new BufferedReader(new FileReader(pathFolder + alunoCSV))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(pathFolder + fileName))) {
 			String line;
 			
 			while((line = br.readLine()) != null) {
-			    String[] values = line.split(",");
-			    records.add(Arrays.asList(values));
-			}
-		}catch (IOException err) {
-			Utils.throwMessageToUser(err, "Erro ao carregar registros do arquivo " + alunoCSV);
-		}
-		return records;
-	}
-	
-	private static List<List<String>> getCursoData() throws FileNotFoundException {
-		List<List<String>> records = new ArrayList<>();
-
-		try (BufferedReader br = new BufferedReader(new FileReader(pathFolder + "\\" + cursoCSV))) {
-			String line;
-			
-			while((line = br.readLine()) != null) {
-			    String[] values = line.split(",");
+			    String[] values = line.split(";");
 			    records.add(Arrays.asList(values));
 			}
 		} catch (IOException err) {
-			Utils.throwMessageToUser(err, "Erro ao carregar registros do arquivo " + cursoCSV);
+			Utils.throwMessageToUser(err, "Erro ao carregar registros do arquivo " + fileName);
 		}
 		
 		return records;
@@ -98,9 +81,8 @@ public class FileService {
 	public static void loadRendimentoData(File file) throws FileNotFoundException, NotaValorException {
 		List<List<String>> records = getRendimentosData(file);
 		
+		int index = 0;		
 		String type = getType(file.getName().split(".csv")[0]);
-		String cursoKey;
-		int index = 0;
 		
 		for(List<String> rendimentos: records) {
 			if(index == 0) { index++; continue; }
@@ -136,7 +118,7 @@ public class FileService {
 			String line;
 			
 			while((line = br.readLine()) != null) {
-			    String[] values = line.split(",");
+			    String[] values = line.split(";");
 			    records.add(Arrays.asList(values));
 			}
 		}catch (IOException err) {
@@ -170,16 +152,12 @@ public class FileService {
 			else {
 				System.out.println("Criando diretório do banco de dados disco!");
 				Files.createDirectories(Paths.get(pathFolder));
-				CommandUtils.awaitTimeAndRun(() -> {System.out.println("Diretório criado com sucesso! \n Chamando o menu...");}, 0);
+				CommandUtils.awaitTimeAndRun(() -> {System.out.println("\nDiretório criado com sucesso! \nChamando o menu...");}, 0);
 			}
 		} catch ( IOException e) {
-			System.out.println(
-					"Ocorreu algum problema ao criar o diretório!\n" +
-					"Erro: "  + e.getMessage() + "\n" +
-					"Local: " + e.getStackTrace()
-			);
+			Utils.throwMessageToUser(e, "Erro a criar o diretório de banco de dados!");
 		}
-		System.out.println("Aguarde um instante... ");
+		System.out.println("\n\nAguarde um instante... ");
 		CommandUtils.awaitTimeAndRun(() -> {CommandUtils.clearScreen(12);},2000);
 	}
 	
@@ -196,7 +174,7 @@ public class FileService {
 			FileWriter fileWrt = new FileWriter(filePath.toFile());
 		    BufferedWriter bufferWrt = new BufferedWriter(fileWrt);
 		    
-		    bufferWrt.write(String.join(",", header));
+		    bufferWrt.write(String.join(";", header));
 		    bufferWrt.newLine();
 		
 			for(String str: mapAlunos.keySet()) {
@@ -206,7 +184,7 @@ public class FileService {
 				alunosUpserted.add(str);
 				rows.add(mapAlunos.get(str).getId());
 				rows.add(mapAlunos.get(str).getName());
-				bufferWrt.write(String.join(",", rows));
+				bufferWrt.write(String.join(";", rows));
 				bufferWrt.newLine();
 			}
 			
@@ -234,7 +212,7 @@ public class FileService {
 			FileWriter fileWrt = new FileWriter(filePath.toFile());
 		    BufferedWriter bufferWrt = new BufferedWriter(fileWrt);
 		    
-		    bufferWrt.write(String.join(",", header));
+		    bufferWrt.write(String.join(";", header));
 		    bufferWrt.newLine();
 		    
 			for(String str: mapCursos.keySet()) {
@@ -245,7 +223,7 @@ public class FileService {
 					rows.add(mapCursos.get(str).getNome());
 					rows.add(mapCursos.get(str).getNivel());
 					rows.add(String.valueOf(mapCursos.get(str).getAno()));
-					bufferWrt.write(String.join(",", rows));
+					bufferWrt.write(String.join(";", rows));
 					bufferWrt.newLine();
 				}
 			}
@@ -283,11 +261,11 @@ public class FileService {
 				FileWriter fileWrt = new FileWriter(filePath.toFile());
 				BufferedWriter bufferWrt = new BufferedWriter(fileWrt);
 
-				bufferWrt.write(String.join(",", header));
+				bufferWrt.write(String.join(";", header));
 				bufferWrt.newLine();
 				
 				for(Rendimento rend: Rendimento.getMapRendimentos().get(str)) {
-					bufferWrt.write(String.join(",", generateCSVRow(rend)));
+					bufferWrt.write(String.join(";", generateCSVRow(rend)));
 					bufferWrt.newLine();
 				}
 				
@@ -302,7 +280,7 @@ public class FileService {
 	
 	private static List<String> generateCSVRow(Rendimento rend) {
 		List<String> row = new ArrayList<String>();
-		rend.calcExam();
+		rend.loadCalcMedia();
 		
 		row.add(rend.getAluno().getId());
 		row.add(String.valueOf(rend.getNp1()));

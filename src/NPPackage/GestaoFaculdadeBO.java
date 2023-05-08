@@ -1,8 +1,7 @@
 package NPPackage;
 
-import java.io.IOException;
-
-import NPPackage.Rendimento.NotaValorException;
+import java.io.IOException; 
+import NPPackage.Utils.*;
 
 public class GestaoFaculdadeBO {
 		

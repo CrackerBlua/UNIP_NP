@@ -1,8 +1,7 @@
 package NPPackage;
 
 import java.util.*;
-
-import NPPackage.Rendimento.NotaValorException;
+import NPPackage.Utils.*;
 
 public class MenuBO {
 
@@ -24,11 +23,14 @@ public class MenuBO {
 		try {
 			while(!breakMainMenu) {
 				MenuDesigner.drawMainMenu();
-				mainMenuOptions(sc.nextInt());				
+				String entry = sc.next();
+				
+				if(!Utils.pattern.matcher(entry).matches())
+					throw new MenuErrorException("Valor entrado não é númerico, entre com um valor válido!");
+				
+				mainMenuOptions(Integer.valueOf(entry));				
 			}
-		} catch (InputMismatchException err) {
-			Utils.throwMessageToUser(err, "Erro entrar com dados!");
-		}
+		} catch (MenuErrorException err) { Utils.throwMessageToUser(err, "Erro ao inserir opção no Menu Principal!");}
 	}
 	
 	private static void mainMenuOptions(int option) throws NotaValorException {
@@ -40,12 +42,11 @@ public class MenuBO {
 				case 4: listingCursoMenu(); break;
 				case 5: RendimentoBO.cadastrarRendimento(RendimentoBO.createRendimento(sc)); break;
 				case 6: listingRelatorioMenu(); break;
-				case 7: breakMainMenu = true; break;
+				case 7: CommandUtils.clearScreen(15); System.out.println("Programa finalizado!"); breakMainMenu = true; break;
 				default: throw new MenuErrorException("Valor entrado para o menu principal é inválido, escolha um novo valor válido");
 			}
-		} catch (MenuErrorException err) {
-			Utils.throwMessageToUser(err, "Erro ao entrar dados no menu!");
-		}
+		} catch (MenuErrorException err) { Utils.throwMessageToUser(err, "Erro ao entrar dados no menu!");
+		} catch (PatternErrorException err) { Utils.throwMessageToUser(err, "Erro ao entrar dados no menu!"); }
 	}
 	
 	private static void listingRelatorioMenu() {
@@ -59,7 +60,7 @@ public class MenuBO {
 	private static void listingRelatorioMenuOption(int option) {
 		try {
 			switch(option) {
-				case 1: printReportByAluno(); break;
+				case 1: printReportByAluno(sc); break;
 				case 2: printReportByCurso(); break;
 				case 3: breakListRelatorioMenu = true; CommandUtils.clearScreen(20); break;
 				default: throw new MenuErrorException("Valor entrado para o menu de listagem de alunos esta incorreto, escolher um valor válido!");
@@ -69,9 +70,8 @@ public class MenuBO {
 		}
 	}
 	
-	private static void printReportByAluno() {
-		System.out.println("\nEntre com o RA do aluno:");
-		String ra = sc.next();
+	private static void printReportByAluno(Scanner sc) {
+		String ra = AlunoBO.askRA(sc);
 		Rendimento.listRendimentosByAluno(ra);
 	}
 	
@@ -83,25 +83,19 @@ public class MenuBO {
 		List<String> answers = new ArrayList<String>();
 		
 		while(!hasCurso) {
-			System.out.println("\nEntre com o Nome do Curso: " );
-			answers.add(sc.next());
-			
+			answers.add(CursoBO.askNomeCurso(sc));
 			MenuBO.createCursoMenu(answers);
-			
-			System.out.println("\nEntre com o Ano do Curso: " );
-			answers.add(String.valueOf(MenuBO.sc.next()));
+			answers.add(CursoBO.askYear(sc));
 			
 			cursoKey = CursoBO.createCursoKey(answers.get(0), answers.get(1), answers.get(2));
 			
 			if(!CursoBO.hasCursoByKey(cursoKey)) {
 				System.out.println("Não foi encontrado nenhum curso com esses dados!\n Entre com dados de um curso válido!");
-				CommandUtils.awaitUntil();
-				continue;
+				CommandUtils.awaitUntil(); continue;
 			}
 			
 			break;
 		}
-
 		Rendimento.listRendimentosByCurso(cursoKey);
 	}
 	
@@ -128,21 +122,15 @@ public class MenuBO {
 		}
 	}
 	
-	private static void printAllCursos() {
-		CommandUtils.clearScreen(15);
-		Curso.showAllCursos();
-	}
+	private static void printAllCursos() { Curso.showAllCursos(); }
 	
-	private static void printCursosByYear() {
-		System.out.println("Digite o Ano do curso: ");
-		Curso.showCursosByYear(sc.nextInt());
-	}
+	private static void printCursosByYear() { Curso.showCursosByYear(CursoBO.askYear(sc)); }
 	
 	public static void createCursoMenu(List<String> answers) {
 		while(!breakListNivelCursoMenu) {
 			MenuDesigner.drawNivelCurso();
 			int option = sc.nextInt();
-			createCursoMenuOptions(option,answers);
+			createCursoMenuOptions(option, answers);
 		}
 		
 		breakListNivelCursoMenu = false;
@@ -193,17 +181,11 @@ public class MenuBO {
 		}
 	}
 	
-	private static void printAllAlunos() {
-		CommandUtils.clearScreen(15);
-		Aluno.showAlunosCadastrados();
-	}
+	private static void printAllAlunos() { Aluno.showAlunosCadastrados(); }
 	
-	private static void printAlunoByRA() {
-		System.out.println("Digite o RA do aluno: ");
-		Aluno.showAlunosCadastrados(sc.next());
-	}
+	private static void printAlunoByRA() { Aluno.showAlunosCadastrados(AlunoBO.askRA(sc)); }
 	
-	public static void listingHasReposicao(Rendimento rendimento) {
+	public static void listingHasReposicao(Rendimento rendimento) throws PatternErrorException {
 		while(!breakListhasReposicao) {
 			MenuDesigner.drawHasReposicao();
 			listinghasReposicaoOptions(sc.nextInt(), rendimento);
@@ -212,10 +194,10 @@ public class MenuBO {
 		breakListhasReposicao = false;
 	}
 	
-	private static void listinghasReposicaoOptions(int option, Rendimento rendimento) {
+	private static void listinghasReposicaoOptions(int option, Rendimento rendimento) throws PatternErrorException {
 		try {
 			switch(option) {
-				case 1: setReposicao(rendimento); breakListhasReposicao = true; break;
+				case 1: setReposicao(rendimento, sc); breakListhasReposicao = true; break;
 				case 2: breakListhasReposicao = true; CommandUtils.clearScreen(3); break;
 				default: throw new MenuErrorException("Valor entrado para o menu de listagem esta incorreto, escolher um valor válido!");
 			}
@@ -226,14 +208,7 @@ public class MenuBO {
 		}
 	}
 	
-	private static void setReposicao(Rendimento rendimento) throws NotaValorException {
-		System.out.println("Qual foi a nota na Reposição?");
-		rendimento.setReposicao(sc.nextDouble());
-	}
-	
-	public static class MenuErrorException extends Exception {
-		/******/
-		private static final long serialVersionUID = 1L;
-		public MenuErrorException(String errorMsg) { super(errorMsg); }
+	private static void setReposicao(Rendimento rendimento, Scanner sc) throws NotaValorException, PatternErrorException {
+		rendimento.setReposicao(RendimentoBO.askReposicao(sc));
 	}
 }

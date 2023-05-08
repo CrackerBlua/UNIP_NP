@@ -15,54 +15,30 @@ public class Aluno {
 		this.name 	= name;
 	}
 
-	public String getId() {
-		return id;
-	}
+	public String getId() { return id; }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+	public void setId(String id) { this.id = id; }
 
-	public String getName() {
-		return name;
-	}
+	public String getName() { return name; }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	public void setName(String name) { this.name = name; }
 
-	public static Map<String, Aluno> getMapAlunos() {
-		return mapAlunos;
-	}
+	public static Map<String, Aluno> getMapAlunos() { return mapAlunos; }
 	
 	public static void setMapAlunos(String ra, Aluno aluno) {
-		if(!mapAlunos.containsKey(ra)) mapAlunos.put(ra, new Aluno());
-		
-		mapAlunos.put(ra, aluno);
+		if(!mapAlunos.containsKey(ra)) mapAlunos.put(ra, new Aluno()); mapAlunos.put(ra, aluno);
 	}
 	
-	public static boolean hasAlunoById(String id) {
-		return AlunoBO.hasAlunoById(id);
-	}
+	public static boolean hasAlunoById(String id) { return AlunoBO.hasAlunoById(id); }
 	
-	public static Aluno getAlunoById(String RA) {
-		return AlunoBO.getAlunoById(RA);
-	}
+	public static Aluno getAlunoById(String RA) { return AlunoBO.getAlunoById(RA); }
 	
-	public static void showAlunosCadastrados() {
-		AlunoBO.showAlunosCadastrados();
-	}
+	public static void showAlunosCadastrados() { AlunoBO.showAlunosCadastrados(); }
 	
-	public static void showAlunosCadastrados(String ra) {
-		AlunoBO.showAlunosCadastrados(ra);
-	}
+	public static void showAlunosCadastrados(String ra) { AlunoBO.showAlunosCadastrados(ra); }
 	
-	public static void upsertAluno() {
-		AlunoBO.upsertAluno();
-	}
+	public static void upsertAluno() { AlunoBO.upsertAluno(); }
 	
 	@Override
-	public String toString() {
-		return "Aluno: " + getName() + " - RA: " + getId();
-	}
+	public String toString() { return "|Aluno: " + getName() + "| - |RA: " + getId() + "|";}
 }

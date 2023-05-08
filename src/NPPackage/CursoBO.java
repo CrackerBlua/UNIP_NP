@@ -1,9 +1,7 @@
 package NPPackage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
+import NPPackage.Utils.PatternErrorException;
+import java.util.*;
 import NPPackage.Curso.Formacao;
 
 public class CursoBO {
@@ -31,12 +29,17 @@ public class CursoBO {
 	}
 	
 	static void showAllCursos() {
+		CommandUtils.clearScreen(15);
 		System.out.println("Cursos cadastrados: ");
 
 		for(String str: Curso.getMapCursos().keySet()) 
 			System.out.println(Curso.getMapCursos().get(str));
 		
 		CommandUtils.awaitUntil();
+	}
+	
+	static void showCursosByYear(String year) {
+		showCursosByYear(Integer.valueOf(year));
 	}
 	
 	static void showCursosByYear(int year) {
@@ -60,19 +63,72 @@ public class CursoBO {
 	static Curso createCurso(Scanner sc) {
 		List<String> answers = new ArrayList<String>();  
 
-		System.out.println("Entre com o Nome do Curso: " );
-		answers.add(sc.next());
-		
+		answers.add(askNomeCurso(sc));
 		MenuBO.createCursoMenu(answers);
-		
-		System.out.println("Entre com o Ano do Curso: " );
-		answers.add(String.valueOf(MenuBO.sc.next()));
+		answers.add(askYear(sc));
 		
 		if(!CursoBO.hasCursoByKey(CursoBO.createCursoKey(answers.get(0), answers.get(1), answers.get(2)))) {
 			return new Curso(answers.get(0), answers.get(1), answers.get(2));
 		}
 		
 		return null;
+	}
+	
+	static String askNomeCurso(Scanner sc) {
+		String name = "";
+		boolean byPass = false;
+		
+		while(!byPass) {
+			try {
+				name = inputNomeCurso(sc);
+				
+				if(Utils.pattern.matcher(name).matches()) 
+					throw new PatternErrorException("Valor entrado não consiste como Nome para o curso, só é aceito caracteres!");
+				
+				byPass = true; break;
+			} catch(PatternErrorException ex) { Utils.throwMessageToUser(ex, "Erro na entrada do Nome do Curso!"); }				
+		}
+		
+		return name;
+	}
+	
+	private static String inputNomeCurso(Scanner sc) {
+		String name = "";
+				
+		System.out.println("\nEntre com o Nome do Curso: " );
+		name = sc.next(); name += sc.hasNextLine()? sc.nextLine(): "";
+		
+		return name.toUpperCase();
+	}
+	
+	static String askYear(Scanner sc) {
+		String year = "";
+		boolean byPass = false;
+		
+		while(!byPass) {
+			try {
+				year = inputYear(sc); 
+				
+				if(year.length() != 4)
+					throw new PatternErrorException("O valor do Ano do Curso não está correto, entre com um valor válido!");
+
+				if(!Utils.pattern.matcher(year).matches()) 
+					throw new PatternErrorException("Valor entrado não consiste como Ano para o curso, só é aceito caracteres!");
+				
+				byPass = true; break;
+			} catch(PatternErrorException ex) { Utils.throwMessageToUser(ex, "Erro na entrada do Ano do Curso!"); }				
+		}
+		
+		return year;
+	}
+	
+	private static String inputYear(Scanner sc) {
+		String year = "";
+		
+		System.out.println("\nEntre com o Ano do Curso: " );
+		year = sc.next();
+		
+		return year;
 	}
 	
 	static void cadastrarCurso(Curso curso) {
