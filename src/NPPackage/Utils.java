@@ -8,8 +8,13 @@ public class Utils {
 	
 	static void throwMessageToUser(Exception err, String title) {
 		System.out.println(title);
-		System.out.println("Erro: \n" + err.getMessage() + "\n" + err.getStackTrace());
+		System.out.println("Erro: " + err.getMessage() + "\n" + err.getStackTrace());
 		CommandUtils.awaitUntil();
 	}
 
+	static void throwMessageToUser(Exception err, String title, boolean clearScreen) {
+		System.out.println(title);
+		System.out.println("Erro: " + err.getMessage() + "\n" + err.getStackTrace());
+		CommandUtils.awaitUntil(clearScreen);
+	}
 }

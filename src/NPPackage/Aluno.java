@@ -63,6 +63,6 @@ public class Aluno {
 	
 	@Override
 	public String toString() {
-		return "Nome do aluno: " + getName() + " RA: " + getId();
+		return "Aluno: " + getName() + " - RA: " + getId();
 	}
 }

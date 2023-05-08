@@ -6,67 +6,26 @@ public abstract class Rendimento {
 
 	private Double np1 = 0.0;
 	private Double np2 = 0.0;
-	private Double reposição = 0.0;
+	private Double reposicao = 0.0;
 	private Double exame = 0.0;
 	private Double media = 0.0;
 	private Aluno aluno = new Aluno();
 	private Curso curso = new Curso();
 	private static boolean aprovado = false;
-	private static Map<String, Rendimento> mapRendimentos = new HashMap<String, Rendimento>();
+	private static Map<String, List<Rendimento>> mapRendimentos = new HashMap<String, List<Rendimento>>();
+	private static Map<String, Rendimento> mapSecretKeyRendimentos = new HashMap<String, Rendimento>();
 
 	public abstract void calcMedia();
 	public abstract void calcExam();
 	public abstract void getExameDetails(Scanner sc, Rendimento rendimento) throws NotaValorException;
-	
-	public Double getReposição() {
-		return reposição;
-	}
-	
-	public void loadInfos(String key) {
-		
-	}
-	
-	public String createReportName() {
-		return getCurso().getNome() + "_" + getCurso().getNivel() + "_" + getCurso().getAno();
-	}
-
-	public void setReposição(Double reposição) throws NotaValorException {
-		boolean breakSetReposicao = false;
-		
-		while(!breakSetReposicao) {
-			if(reposição > 10 || reposição < 0) throw new NotaValorException("Valor entrado não é aplicavel a uma nota");
-			this.reposição = reposição; breakSetReposicao = true; break;
-		}
-	}
-
-	public Double getExame() {
-		return exame;
-	}
-
-	public void setExame(Double exame) throws NotaValorException {
-		boolean breakSetExame = false;
-		
-		while(!breakSetExame) {
-			if(exame > 10 || exame < 0) throw new NotaValorException("Valor entrado não é aplicavel a uma nota");
-			this.exame = exame; breakSetExame = true; break;
-		}
-	}
-
-	public Double getNp2() {
-		return np2;
-	}
-
-	public void setNp2(Double np2) throws NotaValorException{
-		boolean breakSetNP2 = false;
-		
-		while(!breakSetNP2) {
-			if(np2 > 10 || np2 < 0) throw new NotaValorException("Valor entrado não é aplicavel a uma nota");
-			this.np2 = np2; breakSetNP2 = true; break;
-		}
-	}
+	public abstract String isApproved();
 
 	public Double getNp1() {
 		return np1;
+	}
+	
+	public void SetNp1(String np1) throws NotaValorException{
+		setNp1(Double.valueOf(np1));
 	}
 
 	public void setNp1(Double np1) throws NotaValorException {
@@ -78,12 +37,67 @@ public abstract class Rendimento {
 		}
 	}
 	
+	public Double getNp2() {
+		return np2;
+	}
+	
+	public void setNp2(String np1) throws NotaValorException {
+		setNp2(Double.valueOf(np1));
+	}
+
+	public void setNp2(Double np2) throws NotaValorException{
+		boolean breakSetNP2 = false;
+		
+		while(!breakSetNP2) {
+			if(np2 > 10 || np2 < 0) throw new NotaValorException("Valor entrado não é aplicavel a uma nota");
+			this.np2 = np2; breakSetNP2 = true; break;
+		}
+	}
+	
+	public Double getReposicao() {
+		return reposicao;
+	}
+	
+	public void setReposicao(String reposicao) throws NotaValorException {
+		setReposicao(Double.valueOf(reposicao));
+	}
+	
+	public void setReposicao(Double reposicao) throws NotaValorException {
+		boolean breakSetReposicao = false;
+		
+		while(!breakSetReposicao) {
+			if(reposicao > 10 || reposicao < 0) throw new NotaValorException("Valor entrado não é aplicavel a uma nota");
+			this.reposicao = reposicao; breakSetReposicao = true; break;
+		}
+	}
+	
 	public Double getMedia() {
 		return media;
+	}
+	
+	public void setMedia(String media) {
+		setMedia(Double.valueOf(media));
 	}
 
 	public void setMedia(Double media) {
 		this.media = media;
+	}
+	
+	public Double getExame() {
+		return exame;
+	}
+	
+	public void setExame(String exame) throws NotaValorException {
+		setExame(Double.valueOf(exame));
+	}
+
+	public void setExame(Double exame) throws NotaValorException {
+		boolean breakSetExame = false;
+		
+		while(!breakSetExame) {
+			if(exame > 10 || exame < 0) throw new NotaValorException("Valor entrado não é aplicavel a uma nota");
+			this.exame = exame; breakSetExame = true; break;
+		}
 	}
 
 	public Aluno getAluno() {
@@ -93,6 +107,10 @@ public abstract class Rendimento {
 	public void setAluno(Aluno aluno) {
 		this.aluno = aluno;
 	}
+	
+	public void setAluno(String ra) {
+		this.aluno = AlunoBO.getAlunoById(ra);
+	}
 
 	public Curso getCurso() {
 		return curso;
@@ -101,27 +119,23 @@ public abstract class Rendimento {
 	public void setCurso(Curso curso) {
 		this.curso = curso;
 	}
+	
+	public void setCurso(String key) {
+		this.curso = CursoBO.getCursoByKey(key);
+	}
 
-	public static Map<String, Rendimento> getMapRendimentos() {
+	public static Map<String, List<Rendimento>> getMapRendimentos() {
 		return mapRendimentos;
 	}
 
 	public static void setMapRendimentos(String key, Rendimento rendimento) {
 		if(!getMapRendimentos().containsKey(key)) {
-			mapRendimentos.put(key, null);
+			mapRendimentos.put(key, new ArrayList<Rendimento>());
 		}
 		
-		mapRendimentos.put(key, rendimento);
+		mapRendimentos.get(key).add(rendimento);
 	}
 	
-	public String generateKey() {
-		return getAluno().getId() + Curso.getCursoKey(getCurso());
-	}
-	
-	public static String generateKey(Aluno aluno, Curso curso) {
-		return aluno.getId() + CursoBO.getCursoKey(curso);
-	}
-
 	public static boolean isAprovado() {
 		return aprovado;
 	}
@@ -129,14 +143,70 @@ public abstract class Rendimento {
 	public static void setAprovado(boolean aprovado) {
 		Rendimento.aprovado = aprovado;
 	}
+	
+	public static Map<String, Rendimento> getMapSecretKeyRendimentos() {
+		return mapSecretKeyRendimentos;
+	}
+	public static void setMapSecretKeyRendimentos(String secretKey, Rendimento rendimento) {
+		if(!getMapSecretKeyRendimentos().containsKey(secretKey)) {
+			getMapSecretKeyRendimentos().put(secretKey, null);
+		}
+		
+		getMapSecretKeyRendimentos().put(secretKey, rendimento);
+	}
+	
+	public String createReportName() {
+		return getCurso().getNome() + "_" + getCurso().getNivel() + "_" + getCurso().getAno();
+	}
 
+	public Boolean hasSecretKey(Rendimento rendimento) {
+//		return getMapRendimentos()
+		return null;
+	}
+	
+	public String generateKey() {
+		return getCurso().getNome() + "_" + getCurso().getNivel() + "_" + getCurso().getAno();
+	}
+	
+	public static String generateKey(Curso curso) {
+		return curso.getNome() + "_" + curso.getNivel() + "_" + curso.getAno();
+	}
+	
+	public String generateSecretKey() {
+		return getAluno().getId() + "_" + generateKey(getCurso());
+	}
+	
+	public static String generateSecretKey(Aluno aluno, Curso curso) {
+		return aluno.getId() + "_" + curso.getNome() + "_" + curso.getNivel() + "_" + curso.getAno();
+	}
+	
+	public static void upsertRendimento() {
+		FileService.createRelatorioRendimento();
+	}
+	
+	public static void listRendimentosByAluno(String ra) {
+		RendimentoBO.listRendimentosByAluno(ra);
+	}
+	
+	public static void listRendimentosByCurso(String cursoKey) {
+		RendimentoBO.listRendimentosByCurso(cursoKey);
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return 	"NP1: " + getNp1() + " NP2: " + getNp2() + 
+				" Reposição: " + getReposicao() + 
+				" Exame: " + getExame() + " Média: " + getMedia();
+	}
+	
+	/* Inner Classes de diferenciação do tipo do curso*/
 	public static class RendimentoGraduacao extends Rendimento {
 		@Override
 		public void getExameDetails(Scanner sc, Rendimento rendimento) throws NotaValorException {
 			if(rendimento.getMedia() < 7) {
-				CommandUtils.clearScreen(5);
 				System.out.println("O Aluno não atingiu a média esperada!");
-				
+
 				System.out.println("Entre com a nota do Exame do aluno:");
 				super.setExame(sc.nextDouble());
 			}
@@ -146,21 +216,21 @@ public abstract class Rendimento {
 		public void calcMedia() {
 			boolean approved = false;			
 			Double mediaInicial = getMediaCalculated();
-			
-			if(mediaInicial >= 7) {
-				approved = true;
-				super.setMedia(mediaInicial);
-			}
-			
+
+			if(mediaInicial >= 7) { approved = true; super.setMedia(mediaInicial); }
+			if(super.getExame() > 0) { calcExam(); }
 			super.setAprovado(approved);
 		}
 
 		@Override
 		public void calcExam() {
-			boolean approved = false;
-			
-			approved = getExamMedia() >= 5? true: false;
-			super.setAprovado(approved);
+			super.setMedia(getExamMedia());
+			super.setAprovado(super.getMedia() >= 5? true: false);
+		}
+		
+		@Override
+		public String isApproved() {
+			return super.getMedia() >= 7? "Passou": "Reprovado";
 		}
 		
 		private Double getExamMedia() {
@@ -168,17 +238,11 @@ public abstract class Rendimento {
 		}
 		
 		public Double getMediaCalculated() {
-			if(super.getNp1().equals(super.getReposição()) && super.getNp2().equals(super.getReposição())) 
-				return (super.getNp1() + super.getNp2()) / 2;
-			else if(super.getReposição() <= super.getNp1() && super.getReposição() <= super.getNp2())
-				return (super.getNp1() + super.getNp2()) /2;
-			else if(super.getReposição() > super.getNp1() && super.getReposição() <= super.getNp2())
-				return (super.getReposição() + super.getNp2()) /2;
-			else if(super.getReposição() > super.getNp1() && super.getReposição() <= super.getNp2())		
-				return (super.getReposição() + super.getNp1()) /2;
-			else 
-				return (super.getNp2() + super.getNp2()) /2;
+			if(super.getNp1() < super.getNp2() && super.getNp1() < super.getReposicao()) return (super.getNp2() + super.getReposicao()) / 2;
+			if(super.getNp2() < super.getNp1() && super.getNp2() < super.getReposicao()) return (super.getNp1() + super.getReposicao()) / 2;
+			else return (super.getNp1() + super.getNp2()) / 2;
 		}
+
 	}
 	
 	public static class RendimentoPosGraduacao extends Rendimento {
@@ -199,6 +263,11 @@ public abstract class Rendimento {
 		public void getExameDetails(Scanner sc, Rendimento rendimento) {
 			// TODO Auto-generated method stub
 			
+		}
+		
+		@Override
+		public String isApproved() {
+			return super.getMedia() >= 5? "Passou": "Reprovado";
 		}
 	}
 	

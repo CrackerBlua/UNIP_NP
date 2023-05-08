@@ -21,8 +21,17 @@ public class CommandUtils {
 			System.in.read();
 			clearScreen(12);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Utils.throwMessageToUser(e, "IOException error: ");
+		}
+	}
+	
+	static void awaitUntil(boolean clearScreen) {
+		try {
+			System.out.println("\nAperte qualquer tecla para voltar!");
+			System.in.read();
+			if(clearScreen) clearScreen(12);
+		} catch (IOException e) {
+			Utils.throwMessageToUser(e, "IOException error: ");
 		}
 	}
 	
@@ -34,7 +43,7 @@ public class CommandUtils {
 			clearScreen(12);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Utils.throwMessageToUser(e, "IOException error: ");
 		}
 	}
 	
@@ -52,17 +61,4 @@ public class CommandUtils {
 	static void clearScreen(int qtd) {  
 		for (int i = 0; i < qtd; ++i) System.out.println();
 	} 
-	
-	static String getInput(String prompt){
-		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	    System.out.print(prompt);
-	    System.out.flush();
-
-	    try{
-	    	return stdin.readLine();
-	    } catch (Exception e){
-	    	return "Error: " + e.getMessage();
-	    }
-	}
 }

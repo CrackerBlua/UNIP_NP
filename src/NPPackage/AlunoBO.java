@@ -44,15 +44,15 @@ public class AlunoBO {
 	}
 	
 	static void showAlunosCadastrados(String ra) {
-		System.out.println("Aluno: ");
-		System.out.println(Aluno.getMapAlunos().get(ra));
+		System.out.println("Resultado: ");
+		System.out.println(Aluno.getMapAlunos().containsKey(ra)? Aluno.getMapAlunos().get(ra): "Aluno não encontrado!");
 		
 		CommandUtils.awaitUntil();
 	}
 	
 	static void showAlunosCadastrados() {
 		CommandUtils.clearScreen(15);
-		System.out.println("Alunos cadastrados: ");
+		System.out.println("Alunos cadastrados: \n");
 
 		for(String str: Aluno.getMapAlunos().keySet()) 
 			System.out.println(Aluno.getMapAlunos().get(str));

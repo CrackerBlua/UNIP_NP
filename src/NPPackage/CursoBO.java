@@ -15,7 +15,7 @@ public class CursoBO {
 	}
 	
 	static String createCursoKey(String nome, String nivel, int ano) {
-		return nome + ";" + nivel + ";" + String.valueOf(ano) + ";";
+		return nome + ";" + nivel + ";" + String.valueOf(ano);
 	}
 	
 	static String getCursoKey(Curso curso) {
@@ -24,6 +24,10 @@ public class CursoBO {
 	
 	static boolean hasCursoByKey(String key) {
 		return Curso.getMapCursos().containsKey(key);
+	}
+	
+	static Curso getCursoByKey(String key) {
+		return Curso.getMapCursos().get(key);
 	}
 	
 	static void showAllCursos() {
@@ -41,6 +45,8 @@ public class CursoBO {
 		
 		for(Curso curso: Curso.getMapCursos().values())
 			if(curso.getAno() == year) System.out.println(curso);
+		
+		CommandUtils.awaitUntil();
 	}
 	
 	static String getFormacaoNivel(int option) {
