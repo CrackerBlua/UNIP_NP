@@ -8,7 +8,7 @@ public class Aluno {
 	private String name = "";	
 	private static Map<String, Aluno> mapAlunos = new HashMap<String, Aluno>();
 
-	public Aluno() {/* TODO Auto-generated constructor stub */}
+	public Aluno() { /* TODO Auto-generated constructor stub */ }
 
 	public Aluno(String id, String name) {
 		this.id 	= id;

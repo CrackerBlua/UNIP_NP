@@ -18,7 +18,7 @@ public class RendimentoBO {
 		
 		Rendimento rend = chooseCurso(sc);
 		rend.setAluno(chooseAluno(sc));
-		
+				
 		while(!byPass) {
 			try {
 				rend.setNp1(askNP1(sc));
@@ -27,18 +27,18 @@ public class RendimentoBO {
 			} catch(NotaValorException err) { Utils.throwMessageToUser(err, "Erro ao inserir a nota"); }
 		}
 		
-		MenuBO.listingHasReposicao(rend);
-		rend.calcMedia();
-		
-		if(rend.getMedia() < 7 && rend instanceof Rendimento.RendimentoGraduacao) {
-			rend.getExameDetails(sc); rend.calcFinalMedia();
+		if(rend instanceof Rendimento.RendimentoGraduacao) {
+			MenuBO.listingHasReposicao(rend);
+			rend.calcMedia();
+			
+			if(rend.getMedia() < 7) {
+				rend.getExameDetails(sc); rend.calcFinalMedia();
+			}
 		} else if(rend.getMedia() < 5 && rend instanceof Rendimento.RendimentoPosGraduacao) {
 			rend.getExameDetails(sc); rend.calcFinalMedia();
 		}
-	
+		
 		if(!Rendimento.getMapSecretKeyRendimentos().containsKey(rend.generateSecretKey())) {
-			Rendimento.setMapSecretKeyRendimentos(rend.generateSecretKey(), rend);
-			Rendimento.setMapRendimentos(rend.generateKey(), rend);
 			return rend;
 		}
 		
@@ -51,7 +51,7 @@ public class RendimentoBO {
 		
 		while(!byPass) {
 			try {
-				np1 = inputNP(sc, " NP1 ");
+				np1 = inputNota(sc, "a NP1 ");
 				
 				if(np1 < 0 || np1 > 10)
 					throw new NotaValorException("O valor entrado não é equivalente a uma nota, entre com um valor válido!");
@@ -69,7 +69,7 @@ public class RendimentoBO {
 		
 		while(!byPass) {
 			try {
-				np1 = inputNP(sc, " NP2 ");
+				np1 = inputNota(sc, "a NP2 ");
 				
 				if(np1 < 0 || np1 > 10)
 					throw new NotaValorException("O valor entrado não é equivalente a uma nota, entre com um valor válido!");
@@ -87,7 +87,7 @@ public class RendimentoBO {
 		
 		while(!byPass) {
 			try {
-				repo = inputNP(sc, " Reposição ");
+				repo = inputNota(sc, "a Reposição ");
 				
 				if(repo < 0 || repo > 10)
 					throw new NotaValorException("O valor entrado não é equivalente a uma nota, entre com um valor válido!");
@@ -98,9 +98,26 @@ public class RendimentoBO {
 		return 0.0;
 	}
 	
-	private static Double inputNP(Scanner sc, String npToAsk) throws PatternErrorException{
+	public static Double askExame(Scanner sc) throws PatternErrorException, NotaValorException {
+		Double exame = 0.0;
+		boolean byPass = false;
+		
+		while(!byPass) {
+			try {
+				exame = inputNota(sc, "o Exame do Aluno");
+				
+				if(exame < 0 || exame > 10)
+					throw new NotaValorException("O valor entrado não é equivalente a uma nota, entre com um valor válido!");
+				
+				byPass = false; return exame;
+			} catch(PatternErrorException ex) { Utils.throwMessageToUser(ex, "Erro na entrada da Reposição!"); }	
+		}
+		return 0.0;
+	}
 	
-		System.out.println("\nQual foi a nota na" + npToAsk + "?");
+	private static Double inputNota(Scanner sc, String npToAsk) throws PatternErrorException{
+	
+		System.out.println("\nQual foi a nota d" + npToAsk + "?");
 		String NPString = sc.next();
 
 		if(!Utils.pattern.matcher(NPString).matches())
@@ -113,6 +130,8 @@ public class RendimentoBO {
 		if(rendimento == null) {
 			System.out.println("\nJá existe um relatório com esse aluno para esse mesmo curso!"); CommandUtils.awaitUntil();
 		} else {
+			Rendimento.setMapSecretKeyRendimentos(rendimento.generateSecretKey(), rendimento);
+			Rendimento.setMapRendimentos(rendimento.generateKey(), rendimento);
 			Rendimento.upsertRendimento();
 		}
 	}
@@ -193,14 +212,16 @@ public class RendimentoBO {
 			);
 		}
 		
+		System.out.println(Rendimento.getMapRendimentos().toString());
+		
 		CommandUtils.clearScreen(5);
 		System.out.println("Rendimento do Aluno: " + Aluno.getAlunoById(ra).getName() + "\n");
 		for(Rendimento rend: rendAluno) {
 			rend.loadCalcMedia();
 			if(rend.getExame() == 0)
-			System.out.println(" -> Curso: " + rend.getCurso());
-			System.out.println(" -> " + rend);
-			System.out.println("Status: => " + rend.isApproved());
+			System.out.println("=> Curso:       " + rend.getCurso());
+			System.out.println("=> " + rend);
+			System.out.println("=> Status: " + rend.isApproved());
 			System.out.println("\n");
 			totalMedia += rend.getMedia();
 		}

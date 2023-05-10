@@ -15,9 +15,7 @@ public class MenuBO {
 	static boolean breakListhasReposicao 		= false;
 	static Scanner sc 							= new Scanner(System.in);
 	
-	public static void executeMainMenu() throws NotaValorException {
-		mainMenu();
-	}
+	public static void executeMainMenu() throws NotaValorException { mainMenu(); }
 	
 	private static void mainMenu() throws NotaValorException {
 		try {

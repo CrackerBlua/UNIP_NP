@@ -4,13 +4,13 @@ import java.util.*;
 
 public class Curso {
 	
-	public enum Formacao { GRADUACAO, POS_GRADUACAO;}
 	private int ano 		= 0;
 	private String nome 	= "";
 	private String nivel 	= "";
 	private static Map<String, Curso> mapCursos = new HashMap<String, Curso>();
-	
-	public Curso() {}
+	public enum Formacao { GRADUACAO, POS_GRADUACAO;}
+
+	public Curso() { /* TODO Auto-generated constructor stub */ }
 
 	public Curso(String nome, String nivel, int ano) {
 		this.nome 	= nome;

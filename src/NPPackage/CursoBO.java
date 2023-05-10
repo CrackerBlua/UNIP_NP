@@ -32,8 +32,7 @@ public class CursoBO {
 		CommandUtils.clearScreen(15);
 		System.out.println("Cursos cadastrados: ");
 
-		for(String str: Curso.getMapCursos().keySet()) 
-			System.out.println(Curso.getMapCursos().get(str));
+		for(String str: Curso.getMapCursos().keySet()) System.out.println("=> " +Curso.getMapCursos().get(str));
 		
 		CommandUtils.awaitUntil();
 	}
@@ -46,8 +45,7 @@ public class CursoBO {
 		CommandUtils.clearScreen(15);
 		System.out.println("Cursos no ano de " + String.valueOf(year) + " :");
 		
-		for(Curso curso: Curso.getMapCursos().values())
-			if(curso.getAno() == year) System.out.println(curso);
+		for(Curso curso: Curso.getMapCursos().values()) if(curso.getAno() == year) System.out.println("=> " + curso);
 		
 		CommandUtils.awaitUntil();
 	}

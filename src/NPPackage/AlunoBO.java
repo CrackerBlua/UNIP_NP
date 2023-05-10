@@ -83,19 +83,17 @@ public class AlunoBO {
 	
 	static void showAlunosCadastrados(String ra) {
 		System.out.println("\nResultado: ");
-		System.out.println(Aluno.getMapAlunos().containsKey(ra)? Aluno.getMapAlunos().get(ra): "Aluno não encontrado!");
+		System.out.println(Aluno.getMapAlunos().containsKey(ra)? "=> " + Aluno.getMapAlunos().get(ra): "Aluno não encontrado!");
 		CommandUtils.awaitUntil();
 	}
 	
 	static void showAlunosCadastrados() {
 		CommandUtils.clearScreen(15);
-		System.out.println("Alunos cadastrados: \n");
+		System.out.println("Alunos cadastrados:");
 
 		for(String str: Aluno.getMapAlunos().keySet()) 
-			System.out.println(Aluno.getMapAlunos().get(str));
+			System.out.println("=> " + Aluno.getMapAlunos().get(str));
 		
 		CommandUtils.awaitUntil();
 	}
-	
-
 }

@@ -3,6 +3,7 @@ package NPPackage;
 import java.util.*;
 
 import NPPackage.Utils.NotaValorException;
+import NPPackage.Utils.PatternErrorException;
 
 
 public abstract class Rendimento {
@@ -24,11 +25,11 @@ public abstract class Rendimento {
 	public abstract String isApproved();
 
 	public Double getNp1() {
-		return np1;
+		return this.np1;
 	}
 	
 	public void SetNp1(String np1) throws NotaValorException{
-		setNp1(Double.valueOf(np1));
+		this.setNp1(Double.valueOf(np1));
 	}
 
 	public void setNp1(Double np1) throws NotaValorException {
@@ -41,11 +42,11 @@ public abstract class Rendimento {
 	}
 	
 	public Double getNp2() {
-		return np2;
+		return this.np2;
 	}
 	
 	public void setNp2(String np1) throws NotaValorException {
-		setNp2(Double.valueOf(np1));
+		this.setNp2(Double.valueOf(np1));
 	}
 
 	public void setNp2(Double np2) throws NotaValorException{
@@ -58,11 +59,11 @@ public abstract class Rendimento {
 	}
 	
 	public Double getReposicao() {
-		return reposicao;
+		return this.reposicao;
 	}
 	
 	public void setReposicao(String reposicao) throws NotaValorException {
-		setReposicao(Double.valueOf(reposicao));
+		this.setReposicao(Double.valueOf(reposicao));
 	}
 	
 	public void setReposicao(Double reposicao) throws NotaValorException {
@@ -75,11 +76,11 @@ public abstract class Rendimento {
 	}
 	
 	public Double getMedia() {
-		return media;
+		return this.media;
 	}
 	
 	public void setMedia(String media) {
-		setMedia(Double.valueOf(media));
+		this.setMedia(Double.valueOf(media));
 	}
 
 	public void setMedia(Double media) {
@@ -87,11 +88,11 @@ public abstract class Rendimento {
 	}
 	
 	public Double getExame() {
-		return exame;
+		return this.exame;
 	}
 	
 	public void setExame(String exame) throws NotaValorException {
-		setExame(Double.valueOf(exame));
+		this.setExame(Double.valueOf(exame));
 	}
 
 	public void setExame(Double exame) throws NotaValorException {
@@ -104,7 +105,7 @@ public abstract class Rendimento {
 	}
 
 	public Aluno getAluno() {
-		return aluno;
+		return this.aluno;
 	}
 
 	public void setAluno(Aluno aluno) {
@@ -116,7 +117,7 @@ public abstract class Rendimento {
 	}
 
 	public Curso getCurso() {
-		return curso;
+		return this.curso;
 	}
 
 	public void setCurso(Curso curso) {
@@ -159,16 +160,11 @@ public abstract class Rendimento {
 	}
 	
 	public String createReportName() {
-		return getCurso().getNome() + "_" + getCurso().getNivel() + "_" + getCurso().getAno();
-	}
-
-	public Boolean hasSecretKey(Rendimento rendimento) {
-//		return getMapRendimentos()
-		return null;
+		return this.getCurso().getNome() + "_" + this.getCurso().getNivel() + "_" + this.getCurso().getAno();
 	}
 	
 	public String generateKey() {
-		return getCurso().getNome() + "_" + getCurso().getNivel() + "_" + getCurso().getAno();
+		return this.getCurso().getNome() + "_" + this.getCurso().getNivel() + "_" + this.getCurso().getAno();
 	}
 	
 	public static String generateKey(Curso curso) {
@@ -176,7 +172,7 @@ public abstract class Rendimento {
 	}
 	
 	public String generateSecretKey() {
-		return getAluno().getId() + "_" + generateKey(getCurso());
+		return this.getAluno().getId() + "_" + this.generateKey();
 	}
 	
 	public static String generateSecretKey(Aluno aluno, Curso curso) {
@@ -195,36 +191,23 @@ public abstract class Rendimento {
 		RendimentoBO.listRendimentosByCurso(cursoKey);
 	}
 	
-	public void getExameDetails(Scanner sc) throws NotaValorException {
-		boolean byPass = false;
-		System.out.println("O Aluno não atingiu a média esperada!");
-		
-		while(!byPass) {
-			try {
-				System.out.println("Entre com a nota do Exame do aluno:");
-				setExame(sc.nextDouble());
-				byPass = true; break;
-			} catch (NotaValorException e) {
-				byPass = false; Utils.throwMessageToUser(e, "Erro ao inserir a nota do Exame!");
-			}
-		} 
+	public void getExameDetails(Scanner sc) throws NotaValorException, PatternErrorException {
+		this.setExame(RendimentoBO.askExame(sc));
 	}
 	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return 	"|NP1: " + getNp1() + "| |NP2: " + getNp2() + 
-				"| |Reposição: " + getReposicao() + 
-				"| |Exame: " + getExame() + "| |Média: " + getMedia() + "|";
+		return 	"Rendimento : |NP1: " + getNp1() + "| - |NP2: " + getNp2() + 
+				"| - |Reposição: " + getReposicao() + 
+				"| - |Exame: " + getExame() + "| - |Média: " + getMedia() + "|";
 	}
 	
 	/* Inner Classes de diferenciação do tipo do curso*/
 	public static class RendimentoGraduacao extends Rendimento {
 				
 		@Override
-		public void calcMedia() {
-			super.setMedia(getMediaCalculated()); 
-		}
+		public void calcMedia() { super.setMedia(getMediaCalculated()); }
 
 		@Override
 		public void calcFinalMedia() {
@@ -233,9 +216,7 @@ public abstract class Rendimento {
 		}
 		
 		@Override
-		public String isApproved() {
-			return super.getMedia() >= 7? "Passou": "Reprovado";
-		}
+		public String isApproved() { return super.getMedia() >= 7? "Passou!": "Reprovado!"; }
 		
 		@Override
 		public void loadCalcMedia() {
@@ -243,9 +224,7 @@ public abstract class Rendimento {
 			if(super.getMedia() < 7) super.setMedia(getExamMedia());
 		}
 		
-		private Double getExamMedia() {
-			return (super.getExame() + super.getMedia()) / 2;
-		}
+		private Double getExamMedia() { return (super.getExame() + super.getMedia()) / 2; }
 		
 		public Double getMediaCalculated() {
 			if(super.getNp1() < super.getNp2() && super.getNp1() < super.getReposicao()) return (super.getNp2() + super.getReposicao()) / 2;
@@ -257,23 +236,15 @@ public abstract class Rendimento {
 	public static class RendimentoPosGraduacao extends Rendimento {
 
 		@Override
-		public void calcMedia() {		
-			super.setMedia(getMediaCalculated()); 
-		}
+		public void calcMedia() { super.setMedia(getMediaCalculated()); }
 
 		@Override
-		public void calcFinalMedia() {
-			super.setMedia(getExamMedia());
-		}
+		public void calcFinalMedia() { super.setMedia(getExamMedia()); }
 		
 		@Override
-		public String isApproved() {
-			return super.getMedia() >= 5? "Passou": "Reprovado";
-		}
+		public String isApproved() { return super.getMedia() >= 5? "Passou!": "Reprovado!"; }
 		
-		public Double getMediaCalculated() {
-			return (super.getNp1() + super.getNp2()) /2;
-		}
+		public Double getMediaCalculated() { return (super.getNp1() + super.getNp2()) /2; }
 
 		@Override
 		public void loadCalcMedia() {
@@ -281,9 +252,6 @@ public abstract class Rendimento {
 			if(super.getMedia() < 5) calcFinalMedia(); 
 		}
 		
-		private Double getExamMedia() {
-			return (super.getExame() + super.getMedia()) / 2;
-		}
+		private Double getExamMedia() { return (super.getExame() + super.getMedia()) / 2; }
 	}
-
 }

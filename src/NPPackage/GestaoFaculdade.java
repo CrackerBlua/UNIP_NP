@@ -6,7 +6,6 @@ import NPPackage.Utils.*;
 
 public class GestaoFaculdade {
 
-	public static FileService fileService = FileService.getInstance();
 	static Scanner sc = new Scanner(System.in);
 	static boolean breakLoop = false;
 	
