@@ -1,0 +1,14 @@
+https://www.programiz.com/java-programming/enums
+https://mkyong.com/java/java-files-find-examples/
+https://www.delftstack.com/pt/howto/java/how-to-create-a-file-and-write-data-to-it-in-java/
+https://docs.oracle.com/javase/8/docs/api/java/io/FileWriter.html
+https://www.baeldung.com/java-csv
+https://springhow.com/java-write-csv/
+https://www.techgeeknext.com/java/java-write-csv-file	
+https://www.digitalocean.com/community/tutorials/java-files-nio-files-class
+https://www.baeldung.com/java-stop-execution-after-certain-time
+https://www.javatpoint.com/how-to-read-csv-file-in-java
+https://www.baeldung.com/java-csv-file-array
+https://docs.oracle.com/javase/8/docs/api/java/io/FileWriter.html
+https://mkyong.com/java/java-files-find-examples/
+https://stackoverflow.com/questions/122105/how-to-filter-a-java-collection-based-on-predicate	
