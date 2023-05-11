@@ -53,6 +53,8 @@ public class MenuBO {
 			MenuDesigner.drawListagemRelatorioMenu();
 			listingRelatorioMenuOption(sc.nextInt());
 		}
+		
+		breakListRelatorioMenu = false;
 	}
 	
 	private static void listingRelatorioMenuOption(int option) {

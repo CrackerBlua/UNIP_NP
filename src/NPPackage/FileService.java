@@ -211,15 +211,13 @@ public class FileService {
         
 		checkToCreateFolder(pathDir);
 
-		for(String str: Rendimento.getMapRendimentos().keySet()) {
-			String fileName = str + ".csv";
-			checkToCreateFile(pathDir + fileName, fileName);
-		}
-			
 		try {
+			
 			for(String str: Rendimento.getMapRendimentos().keySet()) {
 				String fileName = str + ".csv";
 				
+				checkToCreateFile(pathDir + fileName, fileName);
+
 				FileWriter fileWrt = new FileWriter(Paths.get(pathDir + fileName).toFile());
 				BufferedWriter bufferWrt = new BufferedWriter(fileWrt);
 
@@ -231,13 +229,15 @@ public class FileService {
 					bufferWrt.newLine();
 				}
 				
-			    System.out.println("\nRelatório(s) salvo(s)!");
+			    bufferWrt.flush();
 			    bufferWrt.close();
-				CommandUtils.awaitUntil();
 		    }
 		}catch(IOException e) {
 			Utils.throwMessageToUser(e, "Erro ao salvar relatórios!");
 		}
+
+		System.out.println("\nRelatório(s) salvos)!");
+		CommandUtils.awaitUntil();
 	}
 	
 	private static List<String> generateCSVRow(Rendimento rend) {

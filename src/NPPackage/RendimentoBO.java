@@ -132,6 +132,7 @@ public class RendimentoBO {
 		} else {
 			Rendimento.setMapSecretKeyRendimentos(rendimento.generateSecretKey(), rendimento);
 			Rendimento.setMapRendimentos(rendimento.generateKey(), rendimento);
+			
 			Rendimento.upsertRendimento();
 		}
 	}
@@ -242,7 +243,7 @@ public class RendimentoBO {
 			rend.loadCalcMedia();
 
 			System.out.println(rend.getAluno() + " => " + rend);
-			System.out.println("### Status => " + rend.isApproved());
+			System.out.println("### Status => " + rend.isApproved() + "\n");
 			totalMedia += rend.getMedia();
 		}
 		
