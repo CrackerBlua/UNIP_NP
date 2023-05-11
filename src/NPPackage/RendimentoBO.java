@@ -223,7 +223,7 @@ public class RendimentoBO {
 			System.out.println("=> Curso:       " + rend.getCurso());
 			System.out.println("=> " + rend);
 			System.out.println("=> Status: " + rend.isApproved());
-			System.out.println("\n");
+			System.out.println("");
 			totalMedia += rend.getMedia();
 		}
 		
